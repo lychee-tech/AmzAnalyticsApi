@@ -1,1 +1,1 @@
-web: java -jar -Dspring.profiles.active=prod target/amzanalytics-1.0.jar
+web: java -jar -Dspring.profiles.active=local target/amzanalytics-1.0.jar
