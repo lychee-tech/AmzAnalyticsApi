@@ -1,1 +1,1 @@
-web: java -jar -Dspring.profiles.active=local target/amzanalytics-1.0.jar
+web: java $JAVA_OPTS -Dserver.port=$PORT -Dspring.profiles.active=prod  -cp target/classes/:target/dependency
