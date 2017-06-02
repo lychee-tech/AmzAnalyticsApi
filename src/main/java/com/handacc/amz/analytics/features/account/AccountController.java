@@ -19,8 +19,10 @@ public class AccountController {
     @RequestMapping(value = "/accounts", method= RequestMethod.POST)
     public CreateAccountResponse createAccount(@RequestBody CreateAccountRequest request) {
         UserEntity user = accountService.createAccount(request);
+        CreateAccountResponse accountResponse = new CreateAccountResponse();
+        accountResponse.setId(user.getId());
 
-        return null;
+        return accountResponse;
     }
 
 }
