@@ -1,6 +1,9 @@
 package com.handacc.amz.analytics.features.account.repo;
 
+import com.handacc.amz.analytics.features.account.dto.CreateAccountRequest;
 import com.handacc.amz.analytics.features.account.entity.UserEntity;
+import com.handacc.amz.analytics.features.account.service.AccountService;
+import org.apache.catalina.User;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +18,8 @@ public class UserRepoTest {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private AccountService accountService;
 
     @Test
     public void simpleSaveTest(){
