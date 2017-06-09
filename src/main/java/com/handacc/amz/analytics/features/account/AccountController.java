@@ -4,9 +4,11 @@ package com.handacc.amz.analytics.features.account;
 import com.handacc.amz.analytics.features.account.dto.CreateAccountRequest;
 import com.handacc.amz.analytics.features.account.dto.CreateAccountResponse;
 import com.handacc.amz.analytics.features.account.entity.UserEntity;
+import com.handacc.amz.analytics.features.account.model.User;
 import com.handacc.amz.analytics.features.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,17 +18,20 @@ public class AccountController {
 
     @CrossOrigin
     @RequestMapping(value = "/accounts", method= RequestMethod.POST)
-    public CreateAccountResponse createAccount(@RequestBody CreateAccountRequest request) {
-        UserEntity user = accountService.createAccount(request);
-        CreateAccountResponse accountResponse = new CreateAccountResponse();
-        accountResponse.setId(user.getId());
-        accountResponse.setEmail(request.getEmail());
-        accountResponse.setPhone(request.getPhone());
-        accountResponse.setPassword(request.getPassword());
-        accountResponse.setLastName(request.getLastName());
-        accountResponse.setFirstName(request.getFirstName());
-        accountResponse.setLogin(request.getLogin());
-        return accountResponse;
+    public CreateAccountResponse createAccount(@Validated @RequestBody CreateAccountRequest request) {
+        User user = new User();
+        user.setLastName(request.getLastName());
+        user.setFirstName(request.getFirstName());
+        user.setEmail(request.getEmail());
+        user.setLogin(request.getLogin());
+        user.setPhone(request.getPhone());
+        user.setPassword(request.getPassword());
+
+        CreateAccountResponse response = accountService.createAccount(user);
+
+        return response;
     }
+
+
 
 }
