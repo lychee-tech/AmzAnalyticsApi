@@ -1,4 +1,4 @@
-package com.handacc.amz.analytics;
+package com.leechi.amz.analytics;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.handacc.amz.analytics.features.hello;
+package com.leechi.amz.analytics.features.hello;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

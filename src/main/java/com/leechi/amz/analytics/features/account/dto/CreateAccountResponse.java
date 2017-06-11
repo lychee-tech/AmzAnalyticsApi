@@ -1,4 +1,4 @@
-package com.handacc.amz.analytics.features.account.dto;
+package com.leechi.amz.analytics.features.account.dto;
 
 
 public class CreateAccountResponse extends CreateAccountRequest {

@@ -1,4 +1,4 @@
-package com.handacc.amz.analytics;
+package com.leechi.amz.analytics;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

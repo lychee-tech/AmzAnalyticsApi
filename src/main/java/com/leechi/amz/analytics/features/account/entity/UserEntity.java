@@ -1,4 +1,4 @@
-package com.handacc.amz.analytics.features.account.entity;
+package com.leechi.amz.analytics.features.account.entity;
 
 import javax.persistence.*;
 

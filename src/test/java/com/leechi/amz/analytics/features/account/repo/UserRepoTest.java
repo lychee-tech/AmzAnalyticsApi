@@ -1,6 +1,6 @@
-package com.handacc.amz.analytics.features.account.repo;
+package com.leechi.amz.analytics.features.account.repo;
 
-import com.handacc.amz.analytics.features.account.entity.UserEntity;
+import com.leechi.amz.analytics.features.account.entity.UserEntity;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

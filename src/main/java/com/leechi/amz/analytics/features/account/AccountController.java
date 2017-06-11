@@ -1,10 +1,10 @@
-package com.handacc.amz.analytics.features.account;
+package com.leechi.amz.analytics.features.account;
 
 
-import com.handacc.amz.analytics.features.account.dto.CreateAccountRequest;
-import com.handacc.amz.analytics.features.account.dto.CreateAccountResponse;
-import com.handacc.amz.analytics.features.account.entity.UserEntity;
-import com.handacc.amz.analytics.features.account.service.AccountService;
+import com.leechi.amz.analytics.features.account.dto.CreateAccountRequest;
+import com.leechi.amz.analytics.features.account.dto.CreateAccountResponse;
+import com.leechi.amz.analytics.features.account.entity.UserEntity;
+import com.leechi.amz.analytics.features.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

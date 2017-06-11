@@ -1,4 +1,4 @@
-package com.handacc.amz.analytics.features.account.dto;
+package com.leechi.amz.analytics.features.account.dto;
 
 
 import org.hibernate.validator.constraints.Email;
