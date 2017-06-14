@@ -35,4 +35,32 @@ public class UserRepoTest {
         assertNotNull(saved.getId());
         assertEquals(user.getLogin(), saved.getLogin());
     }
+
+    @Test
+    public void findByEmailTest(){
+        UserEntity user = new UserEntity();
+        user.setLogin("wlin");
+        user.setFirstName("wenhao");
+        user.setLastName("lin");
+        user.setEmail("wenhao.lin@gmail.com");
+        user.setPassword("P@ssword1");
+        userRepo.save(user);
+        UserEntity saved = userRepo.findByEmail("wenhao.lin@gmail.com");
+
+        assertEquals(user.getId(),saved.getId());
+    }
+
+    @Test
+    public void findByIdTest(){
+        UserEntity user = new UserEntity();
+        user.setLogin("wlin");
+        user.setFirstName("wenhao");
+        user.setLastName("lin");
+        user.setEmail("wenhao.lin@gmail.com");
+        user.setPassword("P@ssword1");
+        userRepo.save(user);
+
+        UserEntity saved = userRepo.findById(user.getId());
+        assertEquals(saved.getEmail(),user.getEmail());
+    }
 }

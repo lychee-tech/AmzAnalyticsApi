@@ -1,28 +1,33 @@
 package com.handacc.amz.analytics.features.account.dto;
 
-
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
-public class CreateAccountRequest {
-    @NotBlank(message="login name can't be blank")
-    @Size(max=100, message="your size is exceed 100")
+public class UpdateAccountRequest {
+    private Integer id;
+
+    @NotBlank(message = "login cannot be empty")
+    @Size(max=100,message = "login reach max character limit")
     private String login;
     private String firstName;
     private String lastName;
 
-    @Email(message="invalid email")
-    @NotBlank(message = "email required")
-    @Size(max=100, message="")
+    @Email(message = "invalid email")
+    @NotBlank(message = "email cannot be empty")
+    @Size(max = 100, message = "you have reach max limit")
     private String email;
-
-
     private String phone;
-
-
     private String password;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getLogin() {
         return login;
