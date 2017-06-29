@@ -74,4 +74,17 @@ public class UserRepoTest {
         boolean isExist = userRepo.existsByEmail("wenhao.lin@gmail.com");
         assertEquals(true,isExist);
     }
+
+    @Test
+    public void findByLoginTest(){
+        UserEntity user = new UserEntity();
+        user.setLogin("wlin");
+        user.setFirstName("wenhao");
+        user.setLastName("lin");
+        user.setEmail("wenhao.lin@gmail.com");
+        user.setPassword("P@ssword1");
+        userRepo.save(user);
+        UserEntity saved = userRepo.findByLogin("wlin");
+        assertEquals(user.getLogin(),saved.getLogin());
+    }
 }

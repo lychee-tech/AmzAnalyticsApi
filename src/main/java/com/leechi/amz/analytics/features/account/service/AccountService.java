@@ -6,7 +6,11 @@ import com.leechi.amz.analytics.features.account.dto.UpdateAccountRequest;
 import com.leechi.amz.analytics.features.account.entity.UserEntity;
 import com.leechi.amz.analytics.features.account.model.User;
 import com.leechi.amz.analytics.features.account.repo.UserRepo;
+import com.leechi.amz.analytics.features.account.validate.UniqueEmail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -19,6 +23,8 @@ public class AccountService {
     @Autowired
     public UserRepo userRepo;
 
+   @Autowired private PasswordEncoder passwordEncoder;
+
     public User createAccount(@Valid CreateAccountRequest request) {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(request.getEmail());
@@ -26,7 +32,7 @@ public class AccountService {
         userEntity.setLastName(request.getLastName());
         userEntity.setLogin(request.getLogin());
         userEntity.setPhone(request.getPhone());
-        userEntity.setPassword(request.getPassword());
+        userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepo.save(userEntity);
 
         User user = new User();
@@ -40,12 +46,12 @@ public class AccountService {
         return user;
     }
 
-    public User updateAccount(Integer id, @Valid UpdateAccountRequest request){
-        UserEntity userEntity = userRepo.findById(id);
+    public User updateAccount(@Valid UpdateAccountRequest request){
+        UserEntity userEntity = userRepo.findById(request.getId());
         userEntity.setEmail(request.getEmail());
         userEntity.setLastName(request.getLastName());
         userEntity.setFirstName(request.getFirstName());
-        userEntity.setPassword(request.getPassword());
+        userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
         userEntity.setLogin(request.getLogin());
         userEntity.setPhone(request.getPhone());
         userRepo.save(userEntity);

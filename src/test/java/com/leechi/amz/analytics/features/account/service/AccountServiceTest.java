@@ -12,6 +12,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolation;
@@ -32,7 +33,8 @@ public class AccountServiceTest {
     @Autowired
     AccountService accountService;
 
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -50,7 +52,7 @@ public class AccountServiceTest {
         }catch (Exception ex){
             assertTrue(ex instanceof ConstraintViolationException);
             String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
-            assertTrue(message.contains("email required"));
+            assertTrue(message.contains("email cannot be empty"));
         }
     }
 
@@ -73,13 +75,41 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void createAccountEmailIsCorrectTest(){
+    public void CreateAccountUnqueEmailTest(){
+        UserEntity user1 = new UserEntity();
+        user1.setLogin("yaoyuannie110");
+        user1.setFirstName("dongwei");
+        user1.setLastName("sha");
+        user1.setEmail("nie.luyuan@gmail.com");
+        user1.setPassword("123456");
+        user1.setPhone("3dfsf3");
+        userRepo.save(user1);
+
         CreateAccountRequest request = new CreateAccountRequest();
         //test invalid email
         request.setLogin("yaoyuannie");
         request.setFirstName("luyuan");
         request.setLastName("Nie");
         request.setEmail("nie.luyuan@gmail.com");
+        request.setPassword("P@ssword1");
+        request.setPhone("3dfsf3");
+        try{
+            User serviceResponse2 = accountService.createAccount(request);
+        }catch (Exception ex){
+            assertTrue(ex instanceof ConstraintViolationException);
+            String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
+            assertTrue(message.contains("Email has already Registered"));
+        }
+    }
+
+    @Test
+    public void createAccountEmailIsCorrectTest(){
+        CreateAccountRequest request = new CreateAccountRequest();
+        //test invalid email
+        request.setLogin("yaoyuannie");
+        request.setFirstName("luyuan");
+        request.setLastName("Nie");
+        request.setEmail("nie.luyuan1@gmail.com");
         request.setPassword("P@ssword1");
         User serviceResponse = accountService.createAccount(request);
         UserEntity saved = userRepo.findOne(serviceResponse.getId());
@@ -105,7 +135,7 @@ public class AccountServiceTest {
         }catch (Exception ex){
             assertTrue(ex instanceof ConstraintViolationException);
             String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
-            assertTrue(message.contains("login name can't be blank"));
+            assertTrue(message.contains("login cannot be empty"));
         }
     }
 
@@ -123,7 +153,7 @@ public class AccountServiceTest {
         }catch (Exception ex){
             assertTrue(ex instanceof ConstraintViolationException);
             String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
-            assertTrue(message.contains("your size is exceed 100"));
+            assertTrue(message.contains("login reach max character limit"));
         }
     }
 
@@ -146,25 +176,6 @@ public class AccountServiceTest {
         }
     }
 
-    @Test
-    public void CreateAccountUnqueEmailTest(){
-        CreateAccountRequest request = new CreateAccountRequest();
-        //test invalid email
-        request.setLogin("yaoyuannie");
-        request.setFirstName("luyuan");
-        request.setLastName("Nie");
-        request.setEmail("nie.luyuan@gmail.com");
-        request.setPassword("P@ssword1");
-        request.setPhone("3dfsf3");
-        User serviceResponse = accountService.createAccount(request);
-        try{
-            User serviceResponse2 = accountService.createAccount(request);
-        }catch (Exception ex){
-            assertTrue(ex instanceof ConstraintViolationException);
-            String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
-            assertTrue(message.contains("Email has already Registered"));
-        }
-    }
 
     @Test
     public void UpdateAccountSuccessTest(){
@@ -178,6 +189,7 @@ public class AccountServiceTest {
         userRepo.save(user);
 
         UpdateAccountRequest request = new UpdateAccountRequest();
+        request.setId(1);
         request.setLogin("yaoyuannie110");
         request.setFirstName("luyuan");
         request.setLastName("Nie");
@@ -185,13 +197,14 @@ public class AccountServiceTest {
         request.setPassword("P@ssword1");
         request.setPhone("3dfsf3");
 
-        User updateUser = accountService.updateAccount(1, request);
+        User updateUser = accountService.updateAccount(request);
         UserEntity saved = userRepo.findById(1);
         assertEquals(updateUser.getLogin(),saved.getLogin());
     }
 
     @Test
-    public void UpdateAccountEmailUniqueTest(){
+    public void updateAccountNotUpdateEmail(){
+        //userId:1
         UserEntity user1 = new UserEntity();
         user1.setLogin("yaoyuannie");
         user1.setFirstName("luyuan");
@@ -201,6 +214,7 @@ public class AccountServiceTest {
         user1.setPhone("3dfsf3");
         userRepo.save(user1);
 
+        //userId:2
         UserEntity user2 = new UserEntity();
         user2.setLogin("yaoyuannie");
         user2.setFirstName("luyuan");
@@ -211,6 +225,7 @@ public class AccountServiceTest {
         userRepo.save(user2);
 
         UpdateAccountRequest request = new UpdateAccountRequest();
+        request.setId(2);
         request.setLogin("yaoyuannie110");
         request.setFirstName("luyuan");
         request.setLastName("Nie");
@@ -218,16 +233,75 @@ public class AccountServiceTest {
         request.setPassword("P@ssword1");
         request.setPhone("3dfsf3");
         try {
-            User updateUser = accountService.updateAccount(1, request);
+            User updateUser2 = accountService.updateAccount(request);
+            UserEntity saved = userRepo.findById(2);
+            System.out.print("hello");
+        }catch (Exception ex){
+            assertTrue(ex instanceof ConstraintViolationException);
+            String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
+            assertTrue(message.contains("Email has already Registered"));
+
+        }
+    }
+
+    @Test
+    public void UpdateAccountUpdateEmailTest(){
+        //userId:1
+        UserEntity user1 = new UserEntity();
+        user1.setLogin("yaoyuannie");
+        user1.setFirstName("luyuan");
+        user1.setLastName("Nie");
+        user1.setEmail("nie.luyuan@gmail.com");
+        user1.setPassword("P@ssword1");
+        user1.setPhone("3dfsf3");
+        userRepo.save(user1);
+
+        //userId:2
+        UserEntity user2 = new UserEntity();
+        user2.setLogin("yaoyuannie");
+        user2.setFirstName("luyuan");
+        user2.setLastName("Nie");
+        user2.setEmail("test@gmail.com");
+        user2.setPassword("P@ssword1");
+        user2.setPhone("3dfsf3");
+        userRepo.save(user2);
+
+        UpdateAccountRequest request = new UpdateAccountRequest();
+        request.setId(1);
+        request.setLogin("yaoyuannie110");
+        request.setFirstName("luyuan");
+        request.setLastName("Nie");
+        request.setEmail("test@gmail.com");
+        request.setPassword("P@ssword1");
+        request.setPhone("3dfsf3");
+        try {
+            User updateUser = accountService.updateAccount(request);
             UserEntity saved = userRepo.findById(1);
             System.out.print("hello");
         }catch (Exception ex){
-            System.out.print(ex);
-
+            assertTrue(ex instanceof ConstraintViolationException);
+            String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
+            assertTrue(message.contains("Email has already Registered"));
         }
 
 
     }
+
+    @Test
+    public void passwordIsEncoded(){
+        CreateAccountRequest request = new CreateAccountRequest();
+        //test invalid email
+        request.setLogin("luyuan");
+        request.setFirstName("luyuan");
+        request.setLastName("Nie");
+        request.setEmail("nie.luyuan3@gmail.com");
+        request.setPassword("P@ssword1");
+        accountService.createAccount(request);
+        UserEntity saved = userRepo.findByEmail("nie.luyuan3@gmail.com");
+//        assertEquals(passwordEncoder.encode(request.getPassword()),saved.getPassword());
+        assertTrue(passwordEncoder.matches(request.getPassword(),saved.getPassword()));
+    }
+
 
 
     private String getConstraintViolationsMessage(ConstraintViolationException ex){
