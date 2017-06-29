@@ -1,6 +1,7 @@
 package com.leechi.amz.analytics.features.account.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.leechi.amz.analytics.features.account.validate.Phone;
 import com.leechi.amz.analytics.features.account.validate.UniqueEmail;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -23,6 +24,7 @@ public class UpdateAccountRequest {
     @NotBlank(message = "email cannot be empty")
     @Size(max = 100, message = "you have reach max limit")
     private String email;
+    @Phone
     private String phone;
 
     @NotBlank(message = "password cannot be empty")

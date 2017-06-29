@@ -1,7 +1,7 @@
-package com.leechi.amz.analytics.features.auth;
+package com.leechi.amz.analytics.features.auth.config;
 
-import com.leechi.amz.analytics.features.account.entity.UserEntity;
 import com.leechi.amz.analytics.features.account.repo.UserRepo;
+import com.leechi.amz.analytics.features.auth.service.JdbcUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,14 +40,6 @@ public class JdbcSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        UserEntity user = new UserEntity();
-        user.setLogin("yao");
-        user.setFirstName("luyuan");
-        user.setLastName("Nie");
-        user.setEmail("test@gmail.com");
-        user.setPassword(new BCryptPasswordEncoder().encode("123"));
-        user.setPhone("3dfsf3");
-        userRepo.save(user);
         http.cors().and().csrf().disable()
                 .authorizeRequests().antMatchers(HttpMethod.POST,"/accounts").permitAll().anyRequest().authenticated().and().httpBasic();
     }

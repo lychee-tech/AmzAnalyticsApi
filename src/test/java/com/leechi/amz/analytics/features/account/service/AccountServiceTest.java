@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolation;
@@ -26,6 +27,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AccountServiceTest {
     @Autowired
     UserRepo userRepo;
@@ -185,7 +187,7 @@ public class AccountServiceTest {
         user.setLastName("Nie");
         user.setEmail("nie.luyuan@gmail.com");
         user.setPassword("P@ssword1");
-        user.setPhone("3dfsf3");
+        user.setPhone("123456");
         userRepo.save(user);
 
         UpdateAccountRequest request = new UpdateAccountRequest();
@@ -195,7 +197,7 @@ public class AccountServiceTest {
         request.setLastName("Nie");
         request.setEmail("nie.luyuan@gmail.com");
         request.setPassword("P@ssword1");
-        request.setPhone("3dfsf3");
+        request.setPhone("123456");
 
         User updateUser = accountService.updateAccount(request);
         UserEntity saved = userRepo.findById(1);
@@ -231,7 +233,7 @@ public class AccountServiceTest {
         request.setLastName("Nie");
         request.setEmail("test@gmail.com");
         request.setPassword("P@ssword1");
-        request.setPhone("3dfsf3");
+        request.setPhone("5103005484");
         try {
             User updateUser2 = accountService.updateAccount(request);
             UserEntity saved = userRepo.findById(2);
@@ -302,7 +304,25 @@ public class AccountServiceTest {
         assertTrue(passwordEncoder.matches(request.getPassword(),saved.getPassword()));
     }
 
-
+    @Test
+    public void phoneValidatorTest(){
+        CreateAccountRequest request = new CreateAccountRequest();
+        //test invalid email
+        request.setLogin("luyuan");
+        request.setFirstName("luyuan");
+        request.setLastName("Nie");
+        request.setEmail("nie.luyuan3@gmail.com");
+        request.setPassword("P@ssword1");
+        request.setPhone("123dsfsfwe");
+        try {
+            User creatUser = accountService.createAccount(request);
+            UserEntity saved = userRepo.findById(1);
+        }catch (Exception ex){
+            assertTrue(ex instanceof ConstraintViolationException);
+            String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
+            assertTrue(message.contains("Your phone can only contains digital"));
+        }
+    }
 
     private String getConstraintViolationsMessage(ConstraintViolationException ex){
         List<String> errs = new ArrayList<>();
