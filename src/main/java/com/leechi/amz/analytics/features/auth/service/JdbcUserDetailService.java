@@ -1,4 +1,4 @@
-package com.leechi.amz.analytics.features.auth;
+package com.leechi.amz.analytics.features.auth.service;
 
 import com.leechi.amz.analytics.features.account.entity.UserEntity;
 import com.leechi.amz.analytics.features.account.repo.UserRepo;
