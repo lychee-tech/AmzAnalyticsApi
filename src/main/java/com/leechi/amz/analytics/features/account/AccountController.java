@@ -33,7 +33,8 @@ public class AccountController {
     @RequestMapping(value = "/accounts/{id}", method = RequestMethod.PUT)
     public AccountResponse updateAccount(@PathVariable String id, @RequestBody UpdateAccountRequest request){
         AccountResponse response = new AccountResponse();
-        User user = accountService.updateAccount(Integer.parseInt(id),request);
+        request.setId(Integer.parseInt(id));
+        User user = accountService.updateAccount(request);
 
         response.setId(user.getId());
         response.setEmail(user.getEmail());
