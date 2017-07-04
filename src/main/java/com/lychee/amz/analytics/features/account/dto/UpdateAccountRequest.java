@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
-@UniqueEmail
+@UniqueEmail(propertyPath = "email")
 public class UpdateAccountRequest {
     @JsonIgnore
     private Integer id;

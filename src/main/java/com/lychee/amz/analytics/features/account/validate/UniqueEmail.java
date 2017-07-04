@@ -9,6 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.ANNOTATION_TYPE,ElementType.TYPE})
 @Constraint(validatedBy = UniqueEmailValidator.class)
 public @interface UniqueEmail {
+    String propertyPath() default "email";
     String message() default "Email has already Registered";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload()default {};
