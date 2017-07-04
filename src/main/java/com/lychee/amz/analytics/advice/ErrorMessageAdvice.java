@@ -6,5 +6,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ErrorMessageAdvice {
     @Value("${error.authentication.user_not_found}")
-    public String authUserNotFound;
+    public String  authUserNotFound;
+
+    @Value("${error.internal.error}")
+    public String internalError;
+
+    public static  String staticInternalError = "Internal error";
 }

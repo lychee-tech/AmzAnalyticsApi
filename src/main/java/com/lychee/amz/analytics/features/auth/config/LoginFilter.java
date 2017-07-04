@@ -16,8 +16,8 @@ import java.util.Collections;
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     public LoginFilter(String loginUrl, AuthenticationManager authManager) {
         super(new AntPathRequestMatcher(loginUrl,"POST"));
-        setAuthenticationFailureHandler(new LoginFailureHandler());
         super.setAuthenticationManager(authManager);
+        setAuthenticationFailureHandler(new LoginFailureHandler());
     }
 
     @Override
