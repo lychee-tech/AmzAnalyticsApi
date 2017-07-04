@@ -45,7 +45,7 @@ public class AccountControllerTest {
         UserDTO user = response.getBody();
         Assert.assertEquals(user.getLastName(), "Nie");
         Assert.assertEquals(user.getEmail(), "nie.luyuan@gmail.com");
-    };
+    }
 
     @Test
     public void updateAccountTest(){
