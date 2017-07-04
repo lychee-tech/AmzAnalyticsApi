@@ -1,7 +1,6 @@
 package com.lychee.amz.analytics.features.auth.config;
 
-import com.lychee.amz.analytics.features.account.repo.UserRepo;
-import com.lychee.amz.analytics.features.auth.service.JdbcUserDetailService;
+import com.lychee.amz.analytics.features.auth.service.AuthUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,21 +10,18 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableGlobalAuthentication
 @ComponentScan
-public class JdbcSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired private UserRepo userRepo;
-
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return new JdbcUserDetailService(userRepo);
-    }
-    @Autowired private UserDetailsService userDetailsService;
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AuthUserDetailService authUserDetailService;
+    @Autowired
+    private LycheeAuthenticationEntryPoint lycheeAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -35,12 +31,22 @@ public class JdbcSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(authUserDetailService).passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-                .authorizeRequests().antMatchers(HttpMethod.POST,"/accounts").permitAll().anyRequest().authenticated().and().httpBasic();
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/accounts").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic()
+                .authenticationEntryPoint(lycheeAuthenticationEntryPoint)
+                .and()
+                .addFilterBefore(new LoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+
     }
+
+
 }

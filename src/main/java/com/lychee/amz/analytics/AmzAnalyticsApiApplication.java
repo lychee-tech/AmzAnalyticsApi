@@ -3,11 +3,13 @@ package com.lychee.amz.analytics;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 import java.io.PrintStream;
 
 @SpringBootApplication
+@PropertySource("classpath:/messages.properties")
 public class AmzAnalyticsApiApplication {
 
 	public static void main(String[] args) {
