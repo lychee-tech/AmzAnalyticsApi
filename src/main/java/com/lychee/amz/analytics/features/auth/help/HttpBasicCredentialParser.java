@@ -4,6 +4,7 @@ package com.lychee.amz.analytics.features.auth.help;
 import com.lychee.amz.analytics.features.auth.exception.BadCredentialException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.codec.Base64;
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 
+
 @RestControllerAdvice
 public class GlobalExceptionHandlerAdvice {
     private static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandlerAdvice.class);
