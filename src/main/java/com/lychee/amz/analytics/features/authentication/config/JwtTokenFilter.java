@@ -3,6 +3,7 @@ package com.lychee.amz.analytics.features.authentication.config;
 
 import com.lychee.amz.analytics.Exception.ApiErrorHelp;
 import com.lychee.amz.analytics.Exception.ApiErrorResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,9 +32,22 @@ public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken("user", "user", Collections.<GrantedAuthority>emptyList());
+        String uri   =  StringUtils.defaultString(request.getRequestURI(), "");
+        String method = StringUtils.defaultString(request.getMethod(),"");
+
+        UsernamePasswordAuthenticationToken authentication;
+
+        if ("/api/accounts".equalsIgnoreCase(uri.trim()) && "post".equalsIgnoreCase(method.trim())) {
+             authentication = new UsernamePasswordAuthenticationToken("anonymous", "anonymous", Collections.<GrantedAuthority>emptyList());
+
+        } else {
+            //to do: verify jwt token
+
+            authentication = new UsernamePasswordAuthenticationToken("user", "user", Collections.<GrantedAuthority>emptyList());
+        }
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return null;
+        return authentication;
     }
 
     @Override

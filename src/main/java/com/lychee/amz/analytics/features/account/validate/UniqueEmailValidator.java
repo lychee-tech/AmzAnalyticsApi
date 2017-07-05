@@ -1,5 +1,6 @@
 package com.lychee.amz.analytics.features.account.validate;
 
+import com.lychee.amz.analytics.advice.ErrorMessageAdvice;
 import com.lychee.amz.analytics.features.account.dto.UpdateAccountRequest;
 import com.lychee.amz.analytics.features.account.entity.UserEntity;
 import com.lychee.amz.analytics.features.account.repo.UserRepo;
@@ -23,6 +24,8 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail,Upd
 
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private ErrorMessageAdvice errorMessageAdvice;
 
     public UniqueEmailValidator(UserRepo userRepo){
         this.userRepo = userRepo;
@@ -50,7 +53,7 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail,Upd
 
         if (!isValid) {
             ctx.disableDefaultConstraintViolation();
-            ctx.buildConstraintViolationWithTemplate("duplicate email already exists").addPropertyNode(this.propertyPath).addConstraintViolation();
+            ctx.buildConstraintViolationWithTemplate(errorMessageAdvice.duplicateEmail).addPropertyNode(this.propertyPath).addConstraintViolation();
         }
 
         return isValid;

@@ -15,7 +15,7 @@ public class ApiErrorHelp {
             return mapper.writeValueAsString(apiErrorResponse);
         } catch (Exception ex) {
             logger.error("failed to serialize exception json", ex);
-            return ErrorMessageAdvice.staticInternalError;
+            return ErrorMessageAdvice.getSingleton().internalError;
         }
     }
 }

@@ -14,7 +14,12 @@ public class ErrorMessageAdvice {
     @Value("${error.authentication.bad_credential}")
     public String badCredential;
 
-    public static  String staticInternalError = "Internal error";
+    @Value("${error.validation.duplicate_email}")
+    public String duplicateEmail;
+
+
+
+
 
     private static ErrorMessageAdvice singleton;
 
@@ -25,4 +30,6 @@ public class ErrorMessageAdvice {
     public static ErrorMessageAdvice getSingleton(){
         return singleton;
     }
+
+
 }

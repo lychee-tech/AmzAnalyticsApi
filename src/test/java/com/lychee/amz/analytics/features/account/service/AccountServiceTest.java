@@ -1,5 +1,6 @@
 package com.lychee.amz.analytics.features.account.service;
 
+import com.lychee.amz.analytics.advice.ErrorMessageAdvice;
 import com.lychee.amz.analytics.features.account.dto.CreateAccountRequest;
 import com.lychee.amz.analytics.features.account.dto.UpdateAccountRequest;
 import com.lychee.amz.analytics.features.account.entity.UserEntity;
@@ -37,6 +38,8 @@ public class AccountServiceTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ErrorMessageAdvice errorMessageAdvice;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -77,7 +80,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void CreateAccountUnqueEmailTest(){
+    public void CreateAccountUniqueEmailTest(){
         UserEntity user1 = new UserEntity();
         user1.setLogin("yaoyuannie110");
         user1.setFirstName("dongwei");
@@ -100,7 +103,7 @@ public class AccountServiceTest {
         }catch (Exception ex){
             assertTrue(ex instanceof ConstraintViolationException);
             String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
-            assertTrue(message.contains("Email has already Registered"));
+            assertTrue(message.contains(errorMessageAdvice.duplicateEmail));
         }
     }
 
@@ -283,10 +286,8 @@ public class AccountServiceTest {
         }catch (Exception ex){
             assertTrue(ex instanceof ConstraintViolationException);
             String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
-            assertTrue(message.contains("Email has already Registered"));
+            assertTrue(message.contains(errorMessageAdvice.duplicateEmail));
         }
-
-
     }
 
     @Test

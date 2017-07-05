@@ -34,18 +34,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(authUserDetailService).passwordEncoder(passwordEncoder());
     }
 
+
+    /**
+     * configure authentication
+     * there are three  situations
+     *   1. when url is post /login, we will use http basic authentication
+     *   2. when url is post /api/accounts, we will treat the user as anonymous
+     *   3. whe  url is /api/**, we will use jwt token authentication
+     *
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/accounts").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint(lycheeAuthenticationEntryPoint)
                 .and()
                 .addFilterBefore(new LoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtTokenFilter("/api", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtTokenFilter("/api/**", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 
 
     }

@@ -42,7 +42,7 @@ public class AccountExceptionTest {
         request.setLastName("Nie");
         request.setPassword("123435");
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/accounts", request, ApiErrorResponse.class);
+        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/api/accounts", request, ApiErrorResponse.class);
         assertEquals(500, response.getStatusCodeValue());
         ApiErrorResponse error = response.getBody();
         assertEquals("InternalError", error.getCode());
@@ -61,7 +61,7 @@ public class AccountExceptionTest {
         request.setLastName("Nie");
         request.setPassword("123435");
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/accounts", request, ApiErrorResponse.class);
+        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/api/accounts", request, ApiErrorResponse.class);
         assertEquals(403, response.getStatusCodeValue());
         ApiErrorResponse error = response.getBody();
         assertEquals("Forbidden", error.getCode());
