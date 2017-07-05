@@ -1,4 +1,4 @@
-package com.lychee.amz.analytics.features.auth;
+package com.lychee.amz.analytics.features.authentication;
 
 import com.lychee.amz.analytics.features.account.dto.UserDTO;
 import com.lychee.amz.analytics.features.account.dto.CreateAccountRequest;
@@ -33,7 +33,7 @@ public class AuthenticationTest {
         request.setLastName("Nie");
         request.setPassword("123435");
 
-        ResponseEntity<UserDTO> response = restTemplate.postForEntity("/accounts",request, UserDTO.class);
+        ResponseEntity<UserDTO> response = restTemplate.postForEntity("/api/accounts",request, UserDTO.class);
         assertEquals(200, response.getStatusCode().value());
     }
 }

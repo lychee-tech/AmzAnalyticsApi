@@ -1,10 +1,10 @@
-package com.lychee.amz.analytics.features.auth.service;
+package com.lychee.amz.analytics.features.authentication.service;
 
 import com.lychee.amz.analytics.features.account.entity.UserEntity;
 import com.lychee.amz.analytics.features.account.model.Roles;
 import com.lychee.amz.analytics.features.account.repo.UserRepo;
-import com.lychee.amz.analytics.features.auth.exception.AuthUserNotFoundException;
-import com.lychee.amz.analytics.features.auth.model.AuthUser;
+import com.lychee.amz.analytics.features.authentication.exception.AuthUserNotFoundException;
+import com.lychee.amz.analytics.features.authentication.model.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

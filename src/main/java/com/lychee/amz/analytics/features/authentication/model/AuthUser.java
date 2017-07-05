@@ -1,4 +1,4 @@
-package com.lychee.amz.analytics.features.auth.model;
+package com.lychee.amz.analytics.features.authentication.model;
 
 
 import org.springframework.security.core.GrantedAuthority;

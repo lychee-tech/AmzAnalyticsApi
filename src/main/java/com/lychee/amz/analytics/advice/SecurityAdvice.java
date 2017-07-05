@@ -1,6 +1,6 @@
 package com.lychee.amz.analytics.advice;
 
-import com.lychee.amz.analytics.features.auth.model.AuthUser;
+import com.lychee.amz.analytics.features.authentication.model.AuthUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

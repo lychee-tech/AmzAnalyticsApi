@@ -1,6 +1,6 @@
-package com.lychee.amz.analytics.features.auth.config;
+package com.lychee.amz.analytics.features.authentication.config;
 
-import com.lychee.amz.analytics.features.auth.service.AuthUserDetailService;
+import com.lychee.amz.analytics.features.authentication.service.AuthUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -44,7 +44,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .authenticationEntryPoint(lycheeAuthenticationEntryPoint)
                 .and()
-                .addFilterBefore(new LoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new LoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenFilter("/api", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+
 
     }
 
