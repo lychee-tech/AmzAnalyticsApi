@@ -11,5 +11,18 @@ public class ErrorMessageAdvice {
     @Value("${error.internal.error}")
     public String internalError;
 
+    @Value("${error.authentication.bad_credential}")
+    public String badCredential;
+
     public static  String staticInternalError = "Internal error";
+
+    private static ErrorMessageAdvice singleton;
+
+    public ErrorMessageAdvice() {
+        singleton = this;
+    }
+
+    public static ErrorMessageAdvice getSingleton(){
+        return singleton;
+    }
 }
