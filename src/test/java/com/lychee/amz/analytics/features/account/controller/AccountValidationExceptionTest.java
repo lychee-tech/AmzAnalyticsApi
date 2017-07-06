@@ -35,12 +35,12 @@ public class AccountValidationExceptionTest {
         request.setLastName("lin");
         request.setPassword("123435");
 
-        restTemplate.postForEntity("/accounts", request, ApiErrorResponse.class);
+        restTemplate.postForEntity("/api/accounts", request, ApiErrorResponse.class);
 
-        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/accounts", request, ApiErrorResponse.class);
+        ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/api/accounts", request, ApiErrorResponse.class);
         assertEquals(400, response.getStatusCodeValue());
         ApiErrorResponse error = response.getBody();
         assertEquals("InvalidInput", error.getCode());
-        assertEquals("email: duplicate email already exists", error.getMessage());
+        assertEquals("email: email has already registered", error.getMessage());
     }
 }

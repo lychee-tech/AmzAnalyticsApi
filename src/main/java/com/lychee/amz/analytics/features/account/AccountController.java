@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
     private static Logger logger= LoggerFactory.getLogger(AccountController.class);
 
+
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(value = "/accounts", method= RequestMethod.POST)
+    @RequestMapping(value = "/api/accounts", method= RequestMethod.POST)
     public UserDTO createAccount(@RequestBody CreateAccountRequest request) {
         logger.info(String.format("received to create account with login: %s and email: %s",
                 request.getLogin(), request.getEmail()));
@@ -38,7 +39,7 @@ public class AccountController {
         return response;
     }
 
-    @RequestMapping(value = "/accounts/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/accounts/{id}", method = RequestMethod.PUT)
     public UserDTO updateAccount(@PathVariable String id, @RequestBody UpdateAccountRequest request){
         UserDTO response = new UserDTO();
         request.setId(Integer.parseInt(id));

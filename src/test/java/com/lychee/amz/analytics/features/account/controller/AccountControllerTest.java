@@ -41,7 +41,7 @@ public class AccountControllerTest {
         request.setLastName("Nie");
         request.setPassword("123435");
 
-        ResponseEntity<UserDTO> response = restTemplate.postForEntity("/accounts",request,UserDTO.class);
+        ResponseEntity<UserDTO> response = restTemplate.postForEntity("/api/accounts",request,UserDTO.class);
         UserDTO user = response.getBody();
         Assert.assertEquals(user.getLastName(), "Nie");
         Assert.assertEquals(user.getEmail(), "nie.luyuan@gmail.com");
@@ -57,7 +57,7 @@ public class AccountControllerTest {
         request1.setLastName("Nie");
         request1.setPassword("123435");
 
-        ResponseEntity<UserDTO> response1 = restTemplate.postForEntity("/accounts",request1,UserDTO.class);
+        ResponseEntity<UserDTO> response1 = restTemplate.postForEntity("/api/accounts",request1,UserDTO.class);
         int accountId = response1.getBody().getId();
 
         UpdateAccountRequest request = new UpdateAccountRequest();
@@ -75,7 +75,7 @@ public class AccountControllerTest {
         headers.set("Authorization",authHeader);
 
         HttpEntity entity = new HttpEntity(request,headers);
-        ResponseEntity<UserDTO> response = restTemplate.exchange("/accounts/"+ accountId,HttpMethod.PUT,entity,UserDTO.class);
+        ResponseEntity<UserDTO> response = restTemplate.exchange("/api/accounts/"+ accountId,HttpMethod.PUT,entity,UserDTO.class);
         UserDTO user = response.getBody();
         Assert.assertEquals(user.getLogin(), "yaoyuannie110");
     }
