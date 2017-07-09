@@ -26,11 +26,7 @@ public class AuthenticationTest {
     @Test
     public void requestCreateAccountNoNeedAuth(){
         CreateAccountRequest request = new CreateAccountRequest();
-        request.setPhone("5105899616");
         request.setEmail("nie.luyuan@gmail.com");
-        request.setLogin("yaoyuannie");
-        request.setFirstName("luyuan");
-        request.setLastName("Nie");
         request.setPassword("123435");
 
         ResponseEntity<UserDTO> response = restTemplate.postForEntity("/api/accounts",request, UserDTO.class);

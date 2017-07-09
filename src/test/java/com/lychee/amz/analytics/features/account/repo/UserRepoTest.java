@@ -5,6 +5,7 @@ import com.lychee.amz.analytics.features.account.service.AccountService;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -18,34 +19,30 @@ public class UserRepoTest {
     @Autowired
     private UserRepo userRepo;
 
-    @Autowired
-    private AccountService accountService;
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
 
     @Test
     public void simpleSaveTest(){
         UserEntity user = new UserEntity();
-        user.setLogin("wlin");
-        user.setFirstName("wenhao");
-        user.setLastName("lin");
-        user.setEmail("wenhao.lin@gmail.com");
-        user.setPassword("P@ssword1");
+        user.setEmail("wenhao1.lin@gmail.com");
+        user.setEncryptedPassword(encoder.encode("P@ssword1"));
         userRepo.save(user);
 
         UserEntity saved = userRepo.findOne(user.getId());
         assertNotNull(saved.getId());
-        assertEquals(user.getLogin(), saved.getLogin());
+        assertEquals(user.getEmail(), saved.getEmail());
+
+        assertEquals(user.getEncryptedPassword(), saved.getEncryptedPassword());
     }
 
     @Test
     public void findByEmailTest(){
         UserEntity user = new UserEntity();
-        user.setLogin("wlin");
-        user.setFirstName("wenhao");
-        user.setLastName("lin");
-        user.setEmail("wenhao.lin@gmail.com");
-        user.setPassword("P@ssword1");
+        user.setEmail("wenhao2.lin@gmail.com");
+        user.setEncryptedPassword(encoder.encode("P@ssword1"));
         userRepo.save(user);
-        UserEntity saved = userRepo.findByEmail("wenhao.lin@gmail.com");
+        UserEntity saved = userRepo.findByEmail("wenhao2.lin@gmail.com");
 
         assertEquals(user.getId(),saved.getId());
     }
@@ -53,40 +50,14 @@ public class UserRepoTest {
     @Test
     public void findByIdTest(){
         UserEntity user = new UserEntity();
-        user.setLogin("wlin");
-        user.setFirstName("wenhao");
-        user.setLastName("lin");
-        user.setEmail("wenhao.lin@gmail.com");
-        user.setPassword("P@ssword1");
+        user.setEmail("wenhao3.lin@gmail.com");
+        user.setEncryptedPassword(encoder.encode("P@ssword1"));
         userRepo.save(user);
 
         UserEntity saved = userRepo.findById(user.getId());
         assertEquals(saved.getEmail(),user.getEmail());
     }
 
-    @Test
-    public void existsByEmailTest(){
-        UserEntity user = new UserEntity();
-        user.setLogin("wlin");
-        user.setFirstName("wenhao");
-        user.setLastName("lin");
-        user.setEmail("wenhao.lin@gmail.com");
-        user.setPassword("P@ssword1");
-        userRepo.save(user);
-        boolean isExist = userRepo.existsByEmail("wenhao.lin@gmail.com");
-        assertEquals(true,isExist);
-    }
 
-    @Test
-    public void findByLoginTest(){
-        UserEntity user = new UserEntity();
-        user.setLogin("wlin");
-        user.setFirstName("wenhao");
-        user.setLastName("lin");
-        user.setEmail("wenhao.lin@gmail.com");
-        user.setPassword("P@ssword1");
-        userRepo.save(user);
-        UserEntity saved = userRepo.findByLogin("wlin");
-        assertEquals(user.getLogin(),saved.getLogin());
-    }
+
 }

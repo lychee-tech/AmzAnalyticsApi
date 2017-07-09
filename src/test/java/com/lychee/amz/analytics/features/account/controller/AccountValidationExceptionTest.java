@@ -28,13 +28,8 @@ public class AccountValidationExceptionTest {
     @Test
     public void testDuplicateUser(){
         CreateAccountRequest request = new CreateAccountRequest();
-        request.setPhone("4062091297");
         request.setEmail("wenhaodup.lin@gmail.com");
-        request.setLogin("wlindup");
-        request.setFirstName("wenhao");
-        request.setLastName("lin");
         request.setPassword("123435");
-
         restTemplate.postForEntity("/api/accounts", request, ApiErrorResponse.class);
 
         ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/api/accounts", request, ApiErrorResponse.class);

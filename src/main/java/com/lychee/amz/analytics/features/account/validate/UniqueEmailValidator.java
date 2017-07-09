@@ -1,7 +1,7 @@
 package com.lychee.amz.analytics.features.account.validate;
 
 import com.lychee.amz.analytics.advice.ErrorMessageAdvice;
-import com.lychee.amz.analytics.features.account.dto.UpdateAccountRequest;
+import com.lychee.amz.analytics.features.account.dto.CreateAccountRequest;
 import com.lychee.amz.analytics.features.account.entity.UserEntity;
 import com.lychee.amz.analytics.features.account.repo.UserRepo;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,7 @@ import javax.validation.ConstraintValidatorContext;
  *
  */
 @Component
-public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail,UpdateAccountRequest> {
+public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail,CreateAccountRequest> {
     private String propertyPath;
 
     @Autowired
@@ -35,28 +35,20 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail,Upd
         propertyPath = email.propertyPath();
     }
 
-    public boolean isValid(UpdateAccountRequest request, ConstraintValidatorContext ctx){
+    public boolean isValid(CreateAccountRequest request, ConstraintValidatorContext ctx){
         //this one only validate uniqueness
         if (StringUtils.isBlank(request.getEmail())) {
             return true;
         }
 
         UserEntity entity = userRepo.findByEmail(request.getEmail());
-        boolean isValid;
-
-
-        if (request.getId() == null) {
-            isValid = entity == null;
-        } else {
-            isValid = entity == null ||  (int) request.getId() == entity.getId();
-        }
-
-        if (!isValid) {
+        if (entity!=null) {
             ctx.disableDefaultConstraintViolation();
             ctx.buildConstraintViolationWithTemplate(errorMessageAdvice.duplicateEmail).addPropertyNode(this.propertyPath).addConstraintViolation();
+            return true;
+        } else {
+            return true;
         }
-
-        return isValid;
     }
 }
 

@@ -35,11 +35,7 @@ public class AccountExceptionTest {
         doThrow(new LycheeRunTimeException(200,"xtz","some message")).when(accountService).createAccount(any(CreateAccountRequest.class));
 
         CreateAccountRequest request = new CreateAccountRequest();
-        request.setPhone("5105899616");
         request.setEmail("nie.luyuan@gmail.com");
-        request.setLogin("yaoyuannie");
-        request.setFirstName("luyuan");
-        request.setLastName("Nie");
         request.setPassword("123435");
 
         ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/api/accounts", request, ApiErrorResponse.class);
@@ -54,11 +50,7 @@ public class AccountExceptionTest {
         doThrow(new LycheeFriendlyRunTimeException()).when(accountService).createAccount(any(CreateAccountRequest.class));
 
         CreateAccountRequest request = new CreateAccountRequest();
-        request.setPhone("5105899616");
         request.setEmail("nie.luyuan@gmail.com");
-        request.setLogin("yaoyuannie");
-        request.setFirstName("luyuan");
-        request.setLastName("Nie");
         request.setPassword("123435");
 
         ResponseEntity<ApiErrorResponse> response = restTemplate.postForEntity("/api/accounts", request, ApiErrorResponse.class);
