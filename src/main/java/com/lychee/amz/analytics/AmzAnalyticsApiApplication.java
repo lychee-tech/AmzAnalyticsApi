@@ -14,6 +14,7 @@ import javax.validation.Validator;
 
 @SpringBootApplication
 @PropertySource("classpath:/messages.properties")
+@PropertySource("classpath:/codes.properties")
 public class AmzAnalyticsApiApplication {
 
 	@Bean(name = "messageSource")

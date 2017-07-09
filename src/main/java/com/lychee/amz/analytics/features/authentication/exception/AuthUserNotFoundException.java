@@ -2,6 +2,7 @@ package com.lychee.amz.analytics.features.authentication.exception;
 
 
 import com.lychee.amz.analytics.Exception.ILycheeFriendlyException;
+import com.lychee.amz.analytics.advice.CodeAdvice;
 import com.lychee.amz.analytics.advice.MessageAdvice;
 import org.springframework.security.core.AuthenticationException;
 
@@ -17,6 +18,6 @@ public class AuthUserNotFoundException extends AuthenticationException implement
 
     @Override
     public String getCode() {
-        return "AuthenticationError";
+        return CodeAdvice.singleton.authenticationError;
     }
 }
