@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ErrorMessageAdviceTest {
+public class MessageAdviceTest {
     @Autowired
     private MessageAdvice errorMessageAdvice;
 

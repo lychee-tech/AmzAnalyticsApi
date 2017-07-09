@@ -2,6 +2,7 @@ package com.lychee.amz.analytics.features.authentication.config;
 
 import com.lychee.amz.analytics.Exception.ApiErrorHelp;
 import com.lychee.amz.analytics.Exception.ApiErrorResponse;
+import com.lychee.amz.analytics.advice.CodeAdvice;
 import com.lychee.amz.analytics.features.authentication.help.HttpBasicCredentialParser;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,7 +37,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
 
-        ApiErrorResponse errorResponse = new ApiErrorResponse("AuthenticationError", failed.getMessage());
+        ApiErrorResponse errorResponse = new ApiErrorResponse(CodeAdvice.singleton.authenticationError, failed.getMessage());
         response.getWriter().println(ApiErrorHelp.toJson(errorResponse));
         response.getWriter().flush();
     }

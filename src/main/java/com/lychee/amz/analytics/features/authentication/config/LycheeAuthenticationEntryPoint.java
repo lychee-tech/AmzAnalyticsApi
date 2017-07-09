@@ -3,6 +3,7 @@ package com.lychee.amz.analytics.features.authentication.config;
 
 import com.lychee.amz.analytics.Exception.ApiErrorHelp;
 import com.lychee.amz.analytics.Exception.ApiErrorResponse;
+import com.lychee.amz.analytics.advice.CodeAdvice;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -21,7 +22,7 @@ public class LycheeAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-        ApiErrorResponse errorResponse = new ApiErrorResponse("AuthenticationError", authException.getMessage());
+        ApiErrorResponse errorResponse = new ApiErrorResponse(CodeAdvice.singleton.authenticationError, authException.getMessage());
         response.getWriter().println(ApiErrorHelp.toJson(errorResponse));
         response.getWriter().flush();
     }
