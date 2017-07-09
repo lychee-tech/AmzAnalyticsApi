@@ -34,7 +34,7 @@ public class LoginControllerTest {
 
     @Test
     public void testCannotFoundUser(){
-        doReturn(null).when(userRepo).findByLogin(anyString());
+        doReturn(null).when(userRepo).findByEmail(anyString());
 
         HttpEntity<Object> entity = new HttpEntity<>(HttpBasicHelp.createHttpBasicHeader("user","user"));
         ResponseEntity<ApiErrorResponse> response = restTemplate.exchange("/login", HttpMethod.POST, entity, ApiErrorResponse.class);
@@ -61,12 +61,12 @@ public class LoginControllerTest {
     public void testLoginSuccess(){
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         UserEntity userEntity = new UserEntity();
-        userEntity.setLogin("user");
-        userEntity.setPassword(encoder.encode("user"));
+        userEntity.setEmail("wenhao.lin@gmail.com");
+        userEntity.setEncryptedPassword(encoder.encode("user"));
 
-        doReturn(userEntity).when(userRepo).findByLogin(anyString());
+        doReturn(userEntity).when(userRepo).findByEmail(anyString());
 
-        HttpEntity<Object> entity = new HttpEntity<>(HttpBasicHelp.createHttpBasicHeader("user","user"));
+        HttpEntity<Object> entity = new HttpEntity<>(HttpBasicHelp.createHttpBasicHeader("wenhao.lin@gmail.com","user"));
         ResponseEntity<String> response = restTemplate.exchange("/login", HttpMethod.POST, entity, String.class);
 
         assertEquals("success", response.getBody());

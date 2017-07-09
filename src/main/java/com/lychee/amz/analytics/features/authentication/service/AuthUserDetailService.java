@@ -19,14 +19,14 @@ public class AuthUserDetailService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        UserEntity user = userRepo.findByLogin(login);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity user = userRepo.findByEmail(email);
 
         if (user == null) {
             throw new AuthUserNotFoundException();
         }
 
-        return new AuthUser(user.getLogin(),user.getPassword(), AuthorityUtils.createAuthorityList(Roles.user));
+        return new AuthUser(user.getEmail(),user.getEncryptedPassword(), AuthorityUtils.createAuthorityList(Roles.user));
 
     }
 }
