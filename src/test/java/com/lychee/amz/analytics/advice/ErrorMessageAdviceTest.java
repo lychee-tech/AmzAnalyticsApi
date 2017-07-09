@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class ErrorMessageAdviceTest {
     @Autowired
-    private ErrorMessageAdvice errorMessageAdvice;
+    private MessageAdvice errorMessageAdvice;
 
     @Test
     public void testErrorMessage(){

@@ -10,13 +10,13 @@ import javax.validation.constraints.Size;
 @UniqueEmail(propertyPath = "email")
 public class CreateAccountRequest {
 
-    @Email(message = "invalid email")
-    @NotBlank(message = "email cannot be empty")
-    @Size(max = 100, message = "you have reach max limit")
+    @Email(message = "{error.validation.bad_email}")
+    @NotBlank(message = "{error.validation.blank_email}")
+    @Size(max = 100, message = "{error.validation.email_too_long}")
     private String email;
 
 
-    @NotBlank(message = "password cannot be empty")
+    @NotBlank(message = "{error.validation.blank_password}")
     private String password;
 
 

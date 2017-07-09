@@ -1,7 +1,7 @@
 package com.lychee.amz.analytics.features.account.service;
 
 import com.lychee.amz.analytics.advice.ConstraintViolationExceptionHelp;
-import com.lychee.amz.analytics.advice.ErrorMessageAdvice;
+import com.lychee.amz.analytics.advice.MessageAdvice;
 import com.lychee.amz.analytics.features.account.dto.CreateAccountRequest;
 import com.lychee.amz.analytics.features.account.entity.UserEntity;
 import com.lychee.amz.analytics.features.account.repo.UserRepo;
@@ -35,7 +35,7 @@ public class AccountServiceTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private ErrorMessageAdvice errorMessageAdvice;
+    private MessageAdvice messageAdvice;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -50,14 +50,13 @@ public class AccountServiceTest {
         }catch (Exception ex) {
             assertTrue(ex instanceof  ConstraintViolationException);
             String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
-            assertTrue(message.contains("email cannot be empty"));
+            assertTrue(message.contains(messageAdvice.blankEmail));
         }
     }
 
     @Test
     public void testCreateAccountBadEmail(){
         CreateAccountRequest request = new CreateAccountRequest();
-        //test invalid email
         request.setEmail("123.com");
         request.setPassword("P@ssword1");
         try {
@@ -65,28 +64,27 @@ public class AccountServiceTest {
         }catch (Exception ex){
             assertTrue(ex instanceof ConstraintViolationException);
             String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
-            assertTrue(message.contains("invalid email"));
+            assertTrue(message.contains(messageAdvice.badEmail));
         }
     }
 
     @Test
     public void CreateAccountUniqueEmailTest(){
         UserEntity user1 = new UserEntity();
-        user1.setEmail("nie.luyuan@gmail.com");
-        user1.setEncryptedPassword("123456");
+        user1.setEmail("dup@gmail.com");
+        user1.setEncryptedPassword(passwordEncoder.encode("123456"));
         userRepo.save(user1);
 
         CreateAccountRequest request = new CreateAccountRequest();
-        //test invalid email
 
-        request.setEmail("nie.luyuan@gmail.com");
+        request.setEmail("dup@gmail.com");
         request.setPassword("P@ssword1");
         try{
             accountService.createAccount(request);
         }catch (Exception ex){
             assertTrue(ex instanceof ConstraintViolationException);
             String message = getConstraintViolationsMessage((ConstraintViolationException)ex);
-            assertTrue(message.contains(errorMessageAdvice.duplicateEmail));
+            assertTrue(message.contains(messageAdvice.duplicateEmail));
         }
     }
 
@@ -94,8 +92,6 @@ public class AccountServiceTest {
     @Test
     public void passwordIsEncoded(){
         CreateAccountRequest request = new CreateAccountRequest();
-        //test invalid email
-
         request.setEmail("nie.luyuan3@gmail.com");
         request.setPassword("P@ssword1");
         accountService.createAccount(request);

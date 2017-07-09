@@ -1,35 +1,38 @@
 package com.lychee.amz.analytics;
 
-import com.lychee.amz.analytics.advice.ErrorMessageAdvice;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.io.PrintStream;
+import javax.validation.Validator;
+
 
 @SpringBootApplication
 @PropertySource("classpath:/messages.properties")
 public class AmzAnalyticsApiApplication {
-	@Autowired
-	private ErrorMessageAdvice errorMessageAdvice;
+
+	@Bean(name = "messageSource")
+	public MessageSource messageSource() {
+		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+		messageSource.setBasename("messages");
+		messageSource.setDefaultEncoding("UTF-8");
+		return messageSource;
+	}
+
+	@Bean
+	public Validator localValidatorFactoryBean() {
+		LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+		validator.setValidationMessageSource(messageSource());
+		return validator;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(AmzAnalyticsApiApplication.class);
-		app.setBanner(new Banner() {
-			@Override
-			public void printBanner(Environment environment, Class<?> aClass, PrintStream printStream) {
-				printStream.print("\n" +
-						".____                        .__    .__ \n" +
-						"|    |    ____   ____   ____ |  |__ |__|\n" +
-						"|    |  _/ __ \\_/ __ \\_/ ___\\|  |  \\|  |\n" +
-						"|    |__\\  ___/\\  ___/\\  \\___|   Y  \\  |\n" +
-						"|_______ \\___  >\\___  >\\___  >___|  /__|\n" +
-						"        \\/   \\/     \\/     \\/     \\/    \n");
-			}
-		});
 		app.run(args);
 	}
 }

@@ -36,6 +36,6 @@ public class AccountValidationExceptionTest {
         assertEquals(400, response.getStatusCodeValue());
         ApiErrorResponse error = response.getBody();
         assertEquals("InvalidInput", error.getCode());
-        assertEquals("email: email has already registered", error.getMessage());
+        assertEquals("email: Email has already registered.", error.getMessage());
     }
 }

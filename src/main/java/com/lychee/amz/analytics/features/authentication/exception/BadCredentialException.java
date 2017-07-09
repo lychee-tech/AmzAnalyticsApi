@@ -1,13 +1,13 @@
 package com.lychee.amz.analytics.features.authentication.exception;
 
 import com.lychee.amz.analytics.Exception.ILycheeFriendlyException;
-import com.lychee.amz.analytics.advice.ErrorMessageAdvice;
+import com.lychee.amz.analytics.advice.MessageAdvice;
 import org.springframework.security.core.AuthenticationException;
 
 
 public class BadCredentialException extends AuthenticationException implements ILycheeFriendlyException {
     public BadCredentialException() {
-        super(ErrorMessageAdvice.getSingleton().badCredential);
+        super(MessageAdvice.getSingleton().badCredential);
     }
 
     @Override
