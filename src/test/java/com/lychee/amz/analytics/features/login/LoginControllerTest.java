@@ -61,14 +61,15 @@ public class LoginControllerTest {
     public void testLoginSuccess(){
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         UserEntity userEntity = new UserEntity();
+        userEntity.setId(1);
         userEntity.setEmail("wenhao.lin@gmail.com");
         userEntity.setEncryptedPassword(encoder.encode("user"));
 
         doReturn(userEntity).when(userRepo).findByEmail(anyString());
 
         HttpEntity<Object> entity = new HttpEntity<>(HttpBasicHelp.createHttpBasicHeader("wenhao.lin@gmail.com","user"));
-        ResponseEntity<String> response = restTemplate.exchange("/login", HttpMethod.POST, entity, String.class);
-
-        assertEquals("success", response.getBody());
+        ResponseEntity<Void> response = restTemplate.exchange("/login", HttpMethod.POST, entity, Void.class);
+        String token = response.getHeaders().get("Authorization").get(0);
+        assertTrue(token.startsWith("Bearer"));
     }
 }

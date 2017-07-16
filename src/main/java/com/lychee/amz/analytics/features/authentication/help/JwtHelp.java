@@ -1,4 +1,4 @@
-package com.lychee.amz.analytics.features.authentication.filter;
+package com.lychee.amz.analytics.features.authentication.help;
 
 
 import com.lychee.amz.analytics.advice.ConfigurationAdvice;
