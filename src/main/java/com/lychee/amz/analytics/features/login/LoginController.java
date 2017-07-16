@@ -17,6 +17,7 @@ public class LoginController {
 
     @RequestMapping(value="/login", method= RequestMethod.POST)
     public String login(){
+        Object tmp = securityAdvice.getAuthentication();
         AuthUser user = securityAdvice.getPrinciple();
 
 

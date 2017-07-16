@@ -1,4 +1,4 @@
-package com.lychee.amz.analytics.features.authentication.config;
+package com.lychee.amz.analytics.features.authentication.filter;
 
 
 import com.lychee.amz.analytics.Exception.ApiErrorHelp;

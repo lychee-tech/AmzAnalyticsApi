@@ -1,4 +1,4 @@
-package com.lychee.amz.analytics.features.authentication.help;
+package com.lychee.amz.analytics.features.authentication.filter;
 
 
 import com.lychee.amz.analytics.features.authentication.exception.BadCredentialException;
@@ -12,11 +12,11 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 
 /**
- * parse http basic credential to get user name and password
+ * parseBasicCredential http basic credential to get user name and password
  */
-public class HttpBasicCredentialParser {
+public class HttpCredentialParser {
 
-    public static UsernamePasswordAuthenticationToken parse(HttpServletRequest request) {
+    public static UsernamePasswordAuthenticationToken parseBasicCredential(HttpServletRequest request) {
         String basic = request.getHeader("Authorization");
         if (StringUtils.isBlank(basic) || ! basic.startsWith("Basic ")) {
             throw new BadCredentialException();
