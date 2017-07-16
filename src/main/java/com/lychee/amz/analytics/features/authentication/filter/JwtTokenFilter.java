@@ -3,6 +3,8 @@ package com.lychee.amz.analytics.features.authentication.filter;
 
 import com.lychee.amz.analytics.Exception.ApiErrorHelp;
 import com.lychee.amz.analytics.Exception.ApiErrorResponse;
+import com.lychee.amz.analytics.features.account.model.Roles;
+import com.lychee.amz.analytics.features.authentication.model.AuthUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -20,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 
 
 public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
@@ -38,14 +40,12 @@ public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
         UsernamePasswordAuthenticationToken authentication;
 
         if ("/api/accounts".equalsIgnoreCase(uri.trim()) && "post".equalsIgnoreCase(method.trim())) {
-             authentication = new UsernamePasswordAuthenticationToken("anonymous", "anonymous", Collections.<GrantedAuthority>emptyList());
-
+            //assume anonymous user
+             authentication = createAnonymousUser();
         } else {
-            //to do: verify jwt token
-
-            authentication = new UsernamePasswordAuthenticationToken("user", "user", Collections.<GrantedAuthority>emptyList());
+            //parse from jwt token
+            authentication = HttpCredentialParser.parseBasicCredential(request);
         }
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
@@ -69,5 +69,12 @@ public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
             throws IOException, ServletException {
 
         chain.doFilter(request, response);
+    }
+
+    private UsernamePasswordAuthenticationToken createAnonymousUser() {
+        AuthUser authUser = new AuthUser("anonymous", null, AuthorityUtils.createAuthorityList(Roles.anonymous));
+        authUser.setDisplayName("guest");
+        authUser.setId(-1);
+        return new UsernamePasswordAuthenticationToken(authUser.getUsername(), null, authUser.getAuthorities());
     }
 }
