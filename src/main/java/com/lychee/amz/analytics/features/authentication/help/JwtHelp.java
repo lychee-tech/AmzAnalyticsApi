@@ -39,7 +39,7 @@ public class JwtHelp {
         List<Map<String, String>> authorities = (List<Map<String, String>>) claims.get("authorities");
 
 
-        AuthUser authUser = new AuthUser(email, null, AuthorityUtils.createAuthorityList(getRolesFromAuthority(authorities)));
+        AuthUser authUser = new AuthUser(email, "NA", AuthorityUtils.createAuthorityList(getRolesFromAuthority(authorities)));
         authUser.setId(id);
         authUser.setDisplayName(displayName);
         return authUser;

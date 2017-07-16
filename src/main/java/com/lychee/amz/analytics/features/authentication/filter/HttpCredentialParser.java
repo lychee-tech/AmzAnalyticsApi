@@ -53,6 +53,6 @@ public class HttpCredentialParser {
         String token = authorization.substring(6).trim();
         AuthUser authUser = JwtHelp.parseToken(token);
 
-        return new UsernamePasswordAuthenticationToken(authUser, null,authUser.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(authUser,authUser.getPassword(), authUser.getAuthorities());
     }
 }

@@ -3,7 +3,7 @@ package com.lychee.amz.analytics.features.login;
 import com.lychee.amz.analytics.Exception.ApiErrorResponse;
 import com.lychee.amz.analytics.features.account.entity.UserEntity;
 import com.lychee.amz.analytics.features.account.repo.UserRepo;
-import com.lychee.amz.analytics.testhelp.HttpBasicHelp;
+import com.lychee.amz.analytics.testhelp.HttpCredentialHelp;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -36,7 +35,7 @@ public class LoginControllerTest {
     public void testCannotFoundUser(){
         doReturn(null).when(userRepo).findByEmail(anyString());
 
-        HttpEntity<Object> entity = new HttpEntity<>(HttpBasicHelp.createHttpBasicHeader("user","user"));
+        HttpEntity<Object> entity = new HttpEntity<>(HttpCredentialHelp.createHttpBasicHeader("user", "user"));
         ResponseEntity<ApiErrorResponse> response = restTemplate.exchange("/login", HttpMethod.POST, entity, ApiErrorResponse.class);
         assertEquals(401, response.getStatusCodeValue());
         ApiErrorResponse apiErrorResponse = response.getBody();
@@ -67,9 +66,42 @@ public class LoginControllerTest {
 
         doReturn(userEntity).when(userRepo).findByEmail(anyString());
 
-        HttpEntity<Object> entity = new HttpEntity<>(HttpBasicHelp.createHttpBasicHeader("wenhao.lin@gmail.com","user"));
+        HttpEntity<Object> entity = new HttpEntity<>(HttpCredentialHelp.createHttpBasicHeader("wenhao.lin@gmail.com", "user"));
         ResponseEntity<Void> response = restTemplate.exchange("/login", HttpMethod.POST, entity, Void.class);
         String token = response.getHeaders().get("Authorization").get(0);
         assertTrue(token.startsWith("Bearer"));
+    }
+
+
+    @Test
+    public void testJwtValidationAfterLogin(){
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1);
+        userEntity.setEmail("wenhao.lin@gmail.com");
+        userEntity.setEncryptedPassword(encoder.encode("user"));
+
+        doReturn(userEntity).when(userRepo).findByEmail(anyString());
+
+        HttpEntity<Object> entity = new HttpEntity<>(HttpCredentialHelp.createHttpBasicHeader("wenhao.lin@gmail.com", "user"));
+        ResponseEntity<Void> response = restTemplate.exchange("/login", HttpMethod.POST, entity, Void.class);
+        String bearer = response.getHeaders().get("Authorization").get(0);
+        assertTrue(bearer.startsWith("Bearer"));
+        String token = bearer.substring(6);
+
+
+        HttpEntity<Object> request2 = new HttpEntity<>(HttpCredentialHelp.createHttpBearerHeader(token));
+        ResponseEntity<String> response2 = restTemplate.exchange("/api/hello", HttpMethod.GET, request2, String.class);
+
+        assertEquals("success", response2.getBody());
+    }
+
+
+    @Test
+    public void testInvalidJwtToken(){
+        HttpEntity<Object> request = new HttpEntity<>(HttpCredentialHelp.createHttpBearerHeader("abc"));
+        ResponseEntity<ApiErrorResponse> response = restTemplate.exchange("/api/hello", HttpMethod.GET, request, ApiErrorResponse.class);
+        ApiErrorResponse errorResponse = response.getBody();
+        assertEquals("AuthenticationError", errorResponse.getCode());
     }
 }
