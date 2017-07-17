@@ -1,6 +1,8 @@
 package com.lychee.amz.analytics;
 
 
+import com.lychee.amz.analytics.advice.ConfigurationAdvice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.MessageSource;
@@ -16,6 +18,8 @@ import javax.validation.Validator;
 @PropertySource("classpath:/messages.properties")
 @PropertySource("classpath:/codes.properties")
 public class AmzAnalyticsApiApplication {
+	@Autowired
+	private ConfigurationAdvice configurationAdvice;
 
 	@Bean(name = "messageSource")
 	public MessageSource messageSource() {

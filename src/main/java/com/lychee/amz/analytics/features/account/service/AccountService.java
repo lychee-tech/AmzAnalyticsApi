@@ -1,10 +1,12 @@
 package com.lychee.amz.analytics.features.account.service;
 
 
+import com.lychee.amz.analytics.advice.ISecurityAdvice;
 import com.lychee.amz.analytics.features.account.dto.CreateAccountRequest;
 import com.lychee.amz.analytics.features.account.entity.UserEntity;
 import com.lychee.amz.analytics.features.account.model.User;
 import com.lychee.amz.analytics.features.account.repo.UserRepo;
+import com.lychee.amz.analytics.features.authentication.model.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ public class AccountService {
     public UserRepo userRepo;
 
    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ISecurityAdvice securityAdvice;
 
     public User createAccount(@Valid CreateAccountRequest request) {
         UserEntity userEntity = new UserEntity();

@@ -7,7 +7,7 @@ import org.springframework.security.crypto.codec.Base64;
 
 import java.nio.charset.Charset;
 
-public class HttpBasicHelp {
+public class HttpCredentialHelp {
 
     public static HttpHeaders createHttpBasicHeader(String username, String password){
         String auth = username + ":" + password;
@@ -16,6 +16,13 @@ public class HttpBasicHelp {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", authHeader);
+
+        return headers;
+    }
+
+    public static HttpHeaders createHttpBearerHeader(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
 
         return headers;
     }

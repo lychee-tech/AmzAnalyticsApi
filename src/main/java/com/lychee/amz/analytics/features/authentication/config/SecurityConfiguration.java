@@ -1,11 +1,12 @@
 package com.lychee.amz.analytics.features.authentication.config;
 
+import com.lychee.amz.analytics.features.authentication.filter.JwtTokenFilter;
+import com.lychee.amz.analytics.features.authentication.filter.LoginFilter;
 import com.lychee.amz.analytics.features.authentication.service.AuthUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

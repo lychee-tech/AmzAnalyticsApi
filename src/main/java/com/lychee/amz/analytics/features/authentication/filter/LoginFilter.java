@@ -1,9 +1,8 @@
-package com.lychee.amz.analytics.features.authentication.config;
+package com.lychee.amz.analytics.features.authentication.filter;
 
 import com.lychee.amz.analytics.Exception.ApiErrorHelp;
 import com.lychee.amz.analytics.Exception.ApiErrorResponse;
 import com.lychee.amz.analytics.advice.CodeAdvice;
-import com.lychee.amz.analytics.features.authentication.help.HttpBasicCredentialParser;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -27,7 +26,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        return getAuthenticationManager().authenticate( HttpBasicCredentialParser. parse(request) );
+        return getAuthenticationManager().authenticate( HttpCredentialParser.parseBasicCredential(request) );
     }
 
     @Override

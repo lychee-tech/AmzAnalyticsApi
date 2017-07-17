@@ -1,8 +1,12 @@
-package com.lychee.amz.analytics.features.authentication.config;
+package com.lychee.amz.analytics.features.authentication.filter;
 
 
 import com.lychee.amz.analytics.Exception.ApiErrorHelp;
 import com.lychee.amz.analytics.Exception.ApiErrorResponse;
+import com.lychee.amz.analytics.features.account.model.Roles;
+import com.lychee.amz.analytics.features.authentication.exception.AuthUserNotFoundException;
+import com.lychee.amz.analytics.features.authentication.exception.BadCredentialException;
+import com.lychee.amz.analytics.features.authentication.model.AuthUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -20,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 
 
 public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
@@ -32,18 +36,24 @@ public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        String uri   =  StringUtils.defaultString(request.getRequestURI(), "");
-        String method = StringUtils.defaultString(request.getMethod(),"");
+        String uri = StringUtils.defaultString(request.getRequestURI(), "");
+        String method = StringUtils.defaultString(request.getMethod(), "");
 
         UsernamePasswordAuthenticationToken authentication;
 
         if ("/api/accounts".equalsIgnoreCase(uri.trim()) && "post".equalsIgnoreCase(method.trim())) {
-             authentication = new UsernamePasswordAuthenticationToken("anonymous", "anonymous", Collections.<GrantedAuthority>emptyList());
+            //assume anonymous user
+            authentication = createAnonymousUser();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return authentication;
+        }
 
-        } else {
-            //to do: verify jwt token
 
-            authentication = new UsernamePasswordAuthenticationToken("user", "user", Collections.<GrantedAuthority>emptyList());
+        //parse from jwt token
+        try {
+            authentication = HttpCredentialParser.parseJwtToken(request);
+        } catch (Exception ex) {
+            throw new BadCredentialException();
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -52,7 +62,7 @@ public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,
-                                              HttpServletResponse response, AuthenticationException failed) throws IOException{
+                                              HttpServletResponse response, AuthenticationException failed) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
@@ -69,5 +79,12 @@ public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
             throws IOException, ServletException {
 
         chain.doFilter(request, response);
+    }
+
+    private UsernamePasswordAuthenticationToken createAnonymousUser() {
+        AuthUser authUser = new AuthUser("anonymous", "NA", AuthorityUtils.createAuthorityList(Roles.anonymous));
+        authUser.setDisplayName("guest");
+        authUser.setId(-1);
+        return new UsernamePasswordAuthenticationToken(authUser, authUser.getPassword(), authUser.getAuthorities());
     }
 }

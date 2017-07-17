@@ -26,7 +26,9 @@ public class AuthUserDetailService implements UserDetailsService {
             throw new AuthUserNotFoundException();
         }
 
-        return new AuthUser(user.getEmail(),user.getEncryptedPassword(), AuthorityUtils.createAuthorityList(Roles.user));
-
+        AuthUser authUser = new AuthUser(user.getEmail(),user.getEncryptedPassword(), AuthorityUtils.createAuthorityList(Roles.user));
+        authUser.setDisplayName(user.getDisplayName());
+        authUser.setId(user.getId());
+        return authUser;
     }
 }
