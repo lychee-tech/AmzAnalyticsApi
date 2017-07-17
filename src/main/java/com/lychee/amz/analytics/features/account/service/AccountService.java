@@ -26,8 +26,6 @@ public class AccountService {
     private ISecurityAdvice securityAdvice;
 
     public User createAccount(@Valid CreateAccountRequest request) {
-        AuthUser authUser = securityAdvice.getPrinciple();
-
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(request.getEmail());
         userEntity.setEncryptedPassword(passwordEncoder.encode(request.getPassword()));
