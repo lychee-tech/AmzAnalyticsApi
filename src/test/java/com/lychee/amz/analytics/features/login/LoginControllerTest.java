@@ -67,8 +67,11 @@ public class LoginControllerTest {
         doReturn(userEntity).when(userRepo).findByEmail(anyString());
 
         HttpEntity<Object> entity = new HttpEntity<>(HttpCredentialHelp.createHttpBasicHeader("wenhao.lin@gmail.com", "user"));
-        ResponseEntity<Void> response = restTemplate.exchange("/login", HttpMethod.POST, entity, Void.class);
+        ResponseEntity<AuthUserDTO> response = restTemplate.exchange("/login", HttpMethod.POST, entity, AuthUserDTO.class);
+        assertEquals(201, response.getStatusCodeValue());
         String token = response.getHeaders().get("Authorization").get(0);
+        AuthUserDTO authUser=response.getBody();
+        assertNotNull(authUser);
         assertTrue(token.startsWith("Bearer"));
     }
 
